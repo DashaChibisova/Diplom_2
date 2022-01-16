@@ -1,6 +1,5 @@
 package site.nomorepartie.stellarburgers;
 
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.junit.Assert;
@@ -9,7 +8,7 @@ import org.junit.Test;
 
 import static site.nomorepartie.stellarburgers.UserData.login;
 
-public class ChangeUserDataTest {
+public class ChangeUserDataTest extends TestSteps{
     private UserData userData;
 
     @Before
@@ -57,7 +56,7 @@ public class ChangeUserDataTest {
         String email = changeResponse.extract().path("user.email");
         ChangeData ref = () -> userData.setEmail(email);
         String change = change(ref, userData, "message", 403, false, true);
-        Assert.assertEquals(change, "User with such email already exists");
+        Assert.assertEquals("User with such email already exists", change);
     }
 
     @DisplayName("Нельзя изменить емейл неавторизированного пользователя")
@@ -65,7 +64,7 @@ public class ChangeUserDataTest {
     public void changeEmailUserNotRegistration() {
         ChangeData ref = () -> userData.changeEmail();
         String change = change(ref, userData, "message", 401, false, false);
-        Assert.assertEquals(change, "You should be authorised");
+        Assert.assertEquals("You should be authorised", change );
     }
 
     @DisplayName("Нельзя изменить пароль неавторизированного пользователя")
@@ -73,7 +72,7 @@ public class ChangeUserDataTest {
     public void changePasswordUserNotRegistration() {
         ChangeData ref = () -> userData.changePassword();
         String change = change(ref, userData, "message", 401, false, false);
-        Assert.assertEquals(change, "You should be authorised");
+        Assert.assertEquals("You should be authorised", change);
     }
 
     @DisplayName("Нельзя изменить имя неавторизированного пользователя")
@@ -81,21 +80,7 @@ public class ChangeUserDataTest {
     public void changeNameUserNotRegistration() {
         ChangeData ref = () -> userData.changeName();
         String change = change(ref, userData, "message", 401, false, false);
-        Assert.assertEquals(change, "You should be authorised");
+        Assert.assertEquals("You should be authorised", change);
     }
 
-    @Step
-    public String change(ChangeData ref, UserData userData, String path, int expectedStatus, boolean expectedSuccess, boolean isToken) {
-        String token = "";
-        if (isToken) {
-            ValidatableResponse loginResponse = new User().loginUser(login(userData));
-            token = (loginResponse.extract().path("accessToken")).toString().replace("Bearer ", "");
-        }
-        ValidatableResponse changeResponse = new User().changeUserData(token, ref.isChange());
-        boolean actualSuccess = changeResponse.extract().path("success");
-        int actualStatusCode = changeResponse.extract().statusCode();
-        Assert.assertEquals(actualStatusCode, expectedStatus);
-        Assert.assertEquals(actualSuccess, expectedSuccess);
-        return changeResponse.extract().path(path);
-    }
 }

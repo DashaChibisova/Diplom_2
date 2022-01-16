@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
 
 public class UserCreateWithValidDataTest {
     private UserData userData;
@@ -32,7 +31,7 @@ public class UserCreateWithValidDataTest {
 
         Assert.assertEquals(actualStatusCode, 200);
         Assert.assertTrue(actualSuccess);
-        Assert.assertThat(actualBody, notNullValue());
+        Assert.assertNotNull(actualBody);
     }
 
     @DisplayName("Нельзя создать пользователя, если такой емейл уже есть в системе")

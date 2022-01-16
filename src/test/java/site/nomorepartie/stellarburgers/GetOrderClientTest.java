@@ -5,8 +5,6 @@ import io.restassured.response.ValidatableResponse;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static site.nomorepartie.stellarburgers.UserData.login;
 
 public class GetOrderClientTest {
@@ -33,7 +31,7 @@ public class GetOrderClientTest {
 
         Assert.assertEquals(actualStatusCode, 200);
         Assert.assertTrue(actualSuccess);
-        Assert.assertThat(actualTotal, notNullValue());
+        Assert.assertNotNull(actualTotal);
     }
     @DisplayName("Нельзя получить список заказов неавторизированного пользователя")
     @Test
@@ -45,6 +43,6 @@ public class GetOrderClientTest {
 
         Assert.assertEquals(actualStatusCode, 401);
         Assert.assertFalse(actualSuccess);
-        Assert.assertEquals(actualMessage, "You should be authorised");
+        Assert.assertEquals("You should be authorised", actualMessage);
     }
 }

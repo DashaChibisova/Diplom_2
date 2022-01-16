@@ -3,15 +3,17 @@ package site.nomorepartie.stellarburgers;
 import com.github.javafaker.Faker;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.RandomStringUtils;
+import lombok.experimental.Accessors;
 
 @Getter
+@Setter
+@Accessors(chain = true)
 public class UserData {
 
+    private static Faker faker = new Faker();
     private String email;
     private String password;
     private String name;
-    private static Faker faker = new Faker();
 
     public UserData(String email, String password, String name) {
         this.email = email;
@@ -20,21 +22,6 @@ public class UserData {
     }
 
     public UserData() {
-    }
-
-    public UserData setEmail(String email) {
-        this.email = email;
-        return this;
-    }
-
-    public UserData setPassword(String password) {
-        this.password = password;
-        return this;
-    }
-
-    public UserData setName(String name) {
-        this.name = name;
-        return this;
     }
 
     public static UserData getRandom() {

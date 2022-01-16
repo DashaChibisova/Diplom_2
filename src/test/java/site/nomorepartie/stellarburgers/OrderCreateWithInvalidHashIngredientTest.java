@@ -13,9 +13,7 @@ public class OrderCreateWithInvalidHashIngredientTest {
     public void orderShouldNotBeCreateWithInvalidIngredient() {
         IngredientData ingredientData = new IngredientData(invalidDataIngr);
         Response response = new Order().createOrder(ingredientData).extract().response();
-        String responseXml = response.htmlPath().getString("html.body.pre");
         int statusCode = response.getStatusCode();
-        Assert.assertEquals(responseXml, "Internal Server Error");
-        Assert.assertEquals(statusCode, 500);
+        Assert.assertEquals(statusCode, 404);
     }
 }

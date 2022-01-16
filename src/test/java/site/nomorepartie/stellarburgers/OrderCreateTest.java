@@ -2,16 +2,12 @@ package site.nomorepartie.stellarburgers;
 
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
-import org.hamcrest.Matcher;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.ArrayList;
-
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static site.nomorepartie.stellarburgers.IngredientData.getIngredient;
 import static site.nomorepartie.stellarburgers.UserData.login;
 
@@ -23,10 +19,10 @@ public class OrderCreateTest {
     private String path;
     private int expectedCode;
     private boolean expectedSuccess;
-    private Matcher expected;
+    private String expected;
 
 
-    public OrderCreateTest(boolean isLogin, ArrayList<String> ingredient, String path, int expectedCode, boolean expectedSuccess, Matcher expected) {
+    public OrderCreateTest(boolean isLogin, ArrayList<String> ingredient, String path, int expectedCode, boolean expectedSuccess, String expected) {
         this.isLogin = isLogin;
         this.ingredient = ingredient;
         this.path = path;
@@ -38,10 +34,10 @@ public class OrderCreateTest {
     @Parameterized.Parameters
     public static Object[] getTestData() {
         return new Object[][]{
-                {true, getIngredient(2), "order.number", 200, true, notNullValue()},
-                {false, getIngredient(2), "order.number", 200, true, notNullValue()},
-                {true, null, "message", 400, false, containsString("Ingredient ids must be provided")},
-                {false, null, "message", 400, false, containsString("Ingredient ids must be provided")}
+                {true, getIngredient(2), "order.number", 200, true, null},
+                {false, getIngredient(2), "order.number", 200, true, null},
+                {true, null, "message", 400, false, "Ingredient ids must be provided"},
+                {false, null, "message", 400, false, "Ingredient ids must be provided"}
 
         };
     }
@@ -62,6 +58,10 @@ public class OrderCreateTest {
 
         Assert.assertEquals(actualStatusCode, expectedCode);
         Assert.assertEquals(expectedSuccess, actualSuccess);
-        Assert.assertThat(actualOrderNumber, expected);
+        if (expectedSuccess) {
+            Assert.assertNotNull(actualOrderNumber);
+        } else {
+            Assert.assertEquals(actualOrderNumber, expected);
+        }
     }
 }
